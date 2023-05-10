@@ -1,6 +1,7 @@
+import java.util.Observable;
 import java.util.Random;
 
-public class World {
+public class World extends Observable {
     private Player player;
     private final static double BREAKABLE_WALL_CHANCE = 4;
     private final static double ITEM_CHANCE = 2;
@@ -29,6 +30,10 @@ public class World {
 
     public World() {
         this.map = initMap(map);
+    }
+
+    public void start(){
+        // TODO Implement this
     }
 
     public int[][] getMap() {
@@ -98,5 +103,10 @@ public class World {
 
     public void turnPlayerEast() {
         player.turnEast();
+    }
+
+    public boolean isGameOver() {
+        // return true
+        return !isGameOver;
     }
 }

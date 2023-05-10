@@ -1,3 +1,4 @@
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -8,6 +9,7 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Observer;
 import java.util.List;
+import java.util.Observable;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -23,8 +25,27 @@ public class Window extends JFrame implements Observer {
     private List<Command> commands = new ArrayList<Command>();
 
     public Window() {
-        // TODO Implement this
-        return;
+        super();
+        addKeyListener(new Controller());
+        setLayout(new BorderLayout());
+        renderer = new Renderer();
+        add(renderer, BorderLayout.CENTER);
+        gui = new Gui();
+        add(gui, BorderLayout.SOUTH);
+        world = new World();
+        // world.addObserver(this);
+        setSize(size, size);
+        setAlwaysOnTop(true);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+    }
+
+    @Override
+    public void update(Observable o, Object arg){
+        renderer.repaint();
+
+        if(world.isGameOver()){
+            gui.showGameOverLabel();
+        }
     }
 
     class Renderer extends JPanel {
@@ -34,12 +55,13 @@ public class Window extends JFrame implements Observer {
 
         @Override
         public void paint(Graphics g) {
-            // TODO Not done
             super.paint(g);
+            paintMap(g);
+            paintPlayer(g);
             return;
         }
 
-        private void drawMap(Graphics g) {
+        private void paintMap(Graphics g) {
             int[][] map = world.getMap();
             g.setColor(new Color(56, 135, 0));
             g.fillRect(0, 0, world.getWIDTH(), world.getHEIGHT());
@@ -66,6 +88,7 @@ public class Window extends JFrame implements Observer {
         }
 
         private void paintPlayer(Graphics g) {
+            // TODO Maybe not done.
             // draw player
             int tileSize = 20 * world.getScale();
             g.drawImage(PlayerPic, world.getPlayer().getX(), world.getPlayer().getY(), tileSize, tileSize, null);
@@ -78,6 +101,10 @@ public class Window extends JFrame implements Observer {
         public Gui() {
             setLayout(new FlowLayout());
             // TODO Implement this
+            gameOverLabel = new JLabel("Game Over");
+            gameOverLabel.setForeground(Color.red);
+            gameOverLabel.setVisible(false);
+            add(gameOverLabel);
         }
 
         public void showGameOverLabel() {
