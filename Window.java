@@ -18,7 +18,8 @@ import javax.swing.JPanel;
 
 public class Window extends JFrame implements Observer {
 
-    private int size = 1000;
+    private int width = 920;
+    private int height = 580;
     private World world;
     private Renderer renderer;
     private Gui gui;
@@ -36,11 +37,11 @@ public class Window extends JFrame implements Observer {
         renderer = new Renderer();
         add(renderer, BorderLayout.CENTER);
         gui = new Gui();
-        add(gui, BorderLayout.SOUTH);
         world = new World();
         world.addObserver(this);
-        setSize(size, size);
+        setSize(width, height);
         setAlwaysOnTop(true);
+        setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
@@ -69,7 +70,7 @@ public class Window extends JFrame implements Observer {
         private void paintMap(Graphics g) {
             int[][] map = world.getMap();
             g.setColor(Color.darkGray);
-            g.fillRect(0, 0, size, size);
+            g.fillRect(0, 0, width, height);
 
             int tileSize = 20 * world.getScale();
             for (int i = 0; i < World.getCol(); i++) {
