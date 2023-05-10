@@ -30,9 +30,10 @@ public class World extends Observable {
 
     public World() {
         this.map = initMap(map);
+        player = new Player(20 * scale, 20 * scale);
     }
 
-    public void start(){
+    public void start() {
         // TODO Implement this
     }
 

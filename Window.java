@@ -2,7 +2,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -11,18 +11,23 @@ import java.util.Observer;
 import java.util.List;
 import java.util.Observable;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class Window extends JFrame implements Observer {
 
-    private int size = 500;
+    private int size = 1000;
     private World world;
     private Renderer renderer;
     private Gui gui;
 
     private List<Command> commands = new ArrayList<Command>();
+
+    Image unBreakablePic = new ImageIcon("img/unbreakable.png").getImage();
+    Image BreakablePic = new ImageIcon("img/breakable.png").getImage();
+    Image PlayerPic = new ImageIcon("img/player.png").getImage();
 
     public Window() {
         super();
@@ -33,17 +38,17 @@ public class Window extends JFrame implements Observer {
         gui = new Gui();
         add(gui, BorderLayout.SOUTH);
         world = new World();
-        // world.addObserver(this);
+        world.addObserver(this);
         setSize(size, size);
         setAlwaysOnTop(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
     @Override
-    public void update(Observable o, Object arg){
+    public void update(Observable o, Object arg) {
         renderer.repaint();
 
-        if(world.isGameOver()){
+        if (world.isGameOver()) {
             gui.showGameOverLabel();
         }
     }
@@ -63,24 +68,24 @@ public class Window extends JFrame implements Observer {
 
         private void paintMap(Graphics g) {
             int[][] map = world.getMap();
-            g.setColor(new Color(56, 135, 0));
-            g.fillRect(0, 0, world.getWIDTH(), world.getHEIGHT());
+            g.setColor(Color.darkGray);
+            g.fillRect(0, 0, size, size);
 
             int tileSize = 20 * world.getScale();
-            for (int i = 0; i < World.getRow(); i++) {
-                for (int j = 0; j < World.getCol(); j++) {
+            for (int i = 0; i < World.getCol(); i++) {
+                for (int j = 0; j < World.getRow(); j++) {
                     // 1 = unbreakable block
                     // 2 = breakable block
                     // 3 = bomb
                     // 4 = item
-                    if (map[i][j] == 1) {
-                        // Image unBreakablePic = new ImageIcon("unbreakable.png").getImage();
-                        g.drawImage(unBreakablePic, i * tileSize, j * tileSize, tileSize, tileSize, null);
+                    g.drawImage(unBreakablePic, 14 * tileSize, 8 * tileSize, tileSize, tileSize, null, null);
+                    if (map[j][i] == 1) {
+                        g.drawImage(unBreakablePic, i * tileSize, j * tileSize, tileSize, tileSize, null, null);
                     }
-                    if (map[i][j] == 2) {
-                        g.drawImage(BreakablePic, i * tileSize, j * tileSize, tileSize, tileSize, null);
+                    if (map[j][i] == 2) {
+                        g.drawImage(BreakablePic, i * tileSize, j * tileSize, tileSize, tileSize, null, null);
                     }
-                    if (map[i][j] == 3) {
+                    if (map[j][i] == 3) {
                         // TODO Implement bomb explosion
                     }
                 }
@@ -88,7 +93,6 @@ public class Window extends JFrame implements Observer {
         }
 
         private void paintPlayer(Graphics g) {
-            // TODO Maybe not done.
             // draw player
             int tileSize = 20 * world.getScale();
             g.drawImage(PlayerPic, world.getPlayer().getX(), world.getPlayer().getY(), tileSize, tileSize, null);
