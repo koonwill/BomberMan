@@ -6,6 +6,8 @@ public abstract class WObject {
     private int dx;
     private int dy;
 
+    private int speed = 5;
+
     public WObject() {
     }
 
@@ -16,21 +18,21 @@ public abstract class WObject {
 
     public void turnNorth() {
         dx = 0;
-        dy = -1;
+        dy = -speed;
     }
 
     public void turnSouth() {
         dx = 0;
-        dy = 1;
+        dy = speed;
     }
 
     public void turnWest() {
-        dx = -1;
+        dx = -speed;
         dy = 0;
     }
 
     public void turnEast() {
-        dx = 1;
+        dx = speed;
         dy = 0;
     }
 

@@ -39,6 +39,7 @@ public class Window extends JFrame implements Observer {
         gui = new Gui();
         world = new World();
         world.addObserver(this);
+        world.start();
         setSize(width, height);
         setAlwaysOnTop(true);
         setResizable(false);
@@ -64,7 +65,6 @@ public class Window extends JFrame implements Observer {
             super.paint(g);
             paintMap(g);
             paintPlayer(g);
-            return;
         }
 
         private void paintMap(Graphics g) {
@@ -120,6 +120,9 @@ public class Window extends JFrame implements Observer {
     class Controller extends KeyAdapter {
         @Override
         public void keyPressed(KeyEvent e) {
+            if (e.getKeyCode() == KeyEvent.VK_SPACE){
+                //TODO Implement this to place bomb
+            }
             if (e.getKeyCode() == KeyEvent.VK_UP) {
                 Command command = new CommandTurnNorth(world.getPlayer());
                 command.execute();

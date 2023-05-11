@@ -3,6 +3,8 @@ import java.util.Random;
 
 public class World extends Observable {
     private Player player;
+    private Bomb bomb;
+    private Thread thread;
     private final static double BREAKABLE_WALL_CHANCE = 4;
     private final static double ITEM_CHANCE = 2;
     private final int scale = 3;
@@ -34,7 +36,22 @@ public class World extends Observable {
     }
 
     public void start() {
-        // TODO Implement this
+        thread = new Thread() {
+            @Override
+            public void run() {
+                while (!isGameOver) {
+                    player.move();
+                    setChanged();
+                    notifyObservers();
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        thread.start();
     }
 
     public int[][] getMap() {
@@ -88,6 +105,10 @@ public class World extends Observable {
 
     public Player getPlayer() {
         return player;
+    }
+
+    public Bomb getBomb() {
+        return bomb;
     }
 
     public void turnPlayerNorth() {
